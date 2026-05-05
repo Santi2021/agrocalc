@@ -18,13 +18,13 @@ const Rindes = (() => {
   // ── DATOS ────────────────────────────────
   const CULTIVOS = {
     soja:    { emoji: '🌱', label: 'Soja',    precio: 280, rendRef: 35,
-               costos: { semilla: 45, agro: 80, labores: 60, cosecha: 35, flete: 20, arriendo: 120 } },
+               costos: { semilla: 45, agro: 80, fertilizante: 55, labores: 60, cosecha: 35, flete_gastos: 20, arriendo: 120, seguro: 12, otros: 20 } },
     maiz:    { emoji: '🌽', label: 'Maíz',    precio: 165, rendRef: 80,
-               costos: { semilla: 90, agro: 100, labores: 70, cosecha: 40, flete: 22, arriendo: 120 } },
+               costos: { semilla: 90, agro: 100, fertilizante: 80, labores: 70, cosecha: 40, flete_gastos: 22, arriendo: 120, seguro: 14, otros: 22 } },
     trigo:   { emoji: '🌾', label: 'Trigo',   precio: 210, rendRef: 40,
-               costos: { semilla: 40, agro: 70, labores: 55, cosecha: 30, flete: 18, arriendo: 110 } },
+               costos: { semilla: 40, agro: 70, fertilizante: 65, labores: 55, cosecha: 30, flete_gastos: 18, arriendo: 110, seguro: 10, otros: 18 } },
     girasol: { emoji: '🌻', label: 'Girasol', precio: 340, rendRef: 22,
-               costos: { semilla: 30, agro: 55, labores: 55, cosecha: 28, flete: 15, arriendo: 100 } },
+               costos: { semilla: 30, agro: 55, fertilizante: 40, labores: 55, cosecha: 28, flete_gastos: 15, arriendo: 100, seguro: 9, otros: 15 } },
   };
 
   const HISTORICOS = {
@@ -75,8 +75,9 @@ const Rindes = (() => {
     const precio = getVal('precio-slider');
 
     const costo_ha =
-      getVal('c-semilla') + getVal('c-agro') + getVal('c-labores') +
-      getVal('c-cosecha') + getVal('c-flete') + getVal('c-arriendo');
+      getVal('c-semilla') + getVal('c-agro') + getVal('c-fertilizante') + getVal('c-labores') +
+      getVal('c-cosecha') + getVal('c-flete_gastos') + getVal('c-arriendo') +
+      getVal('c-seguro') + getVal('c-otros');
 
     const ingreso_ha = (rinde / 10) * precio;
     const margen_ha  = ingreso_ha - costo_ha;
@@ -132,12 +133,15 @@ const Rindes = (() => {
     const d = CULTIVOS[c];
     document.getElementById('precio-slider').value = d.precio;
     document.getElementById('rinde').value          = d.rendRef;
-    document.getElementById('c-semilla').value      = d.costos.semilla;
-    document.getElementById('c-agro').value         = d.costos.agro;
-    document.getElementById('c-labores').value      = d.costos.labores;
-    document.getElementById('c-cosecha').value      = d.costos.cosecha;
-    document.getElementById('c-flete').value        = d.costos.flete;
-    document.getElementById('c-arriendo').value     = d.costos.arriendo;
+    document.getElementById('c-semilla').value       = d.costos.semilla;
+    document.getElementById('c-agro').value          = d.costos.agro;
+    document.getElementById('c-fertilizante').value  = d.costos.fertilizante;
+    document.getElementById('c-labores').value       = d.costos.labores;
+    document.getElementById('c-cosecha').value       = d.costos.cosecha;
+    document.getElementById('c-flete_gastos').value  = d.costos.flete_gastos;
+    document.getElementById('c-arriendo').value      = d.costos.arriendo;
+    document.getElementById('c-seguro').value        = d.costos.seguro;
+    document.getElementById('c-otros').value         = d.costos.otros;
     updateSlider(document.getElementById('precio-slider'));
     renderHistorico();
     calcular();
@@ -167,12 +171,15 @@ const Rindes = (() => {
     const rinde  = getVal('rinde');
     const precio = getVal('precio-slider');
     const costos = {
-      Semilla:       getVal('c-semilla'),
-      Agroquímicos:  getVal('c-agro'),
-      Labores:       getVal('c-labores'),
-      Cosecha:       getVal('c-cosecha'),
-      Flete:         getVal('c-flete'),
-      Arrendamiento: getVal('c-arriendo'),
+      Semilla:              getVal('c-semilla'),
+      Agroquímicos:         getVal('c-agro'),
+      Fertilizantes:        getVal('c-fertilizante'),
+      'Labores / Siembra':  getVal('c-labores'),
+      Cosecha:              getVal('c-cosecha'),
+      'Flete / Gtos. Com.': getVal('c-flete_gastos'),
+      Arrendamiento:        getVal('c-arriendo'),
+      Seguro:               getVal('c-seguro'),
+      Otros:                getVal('c-otros'),
     };
     const costo_ha   = Object.values(costos).reduce((a,b) => a+b, 0);
     const ingreso_ha = (rinde / 10) * precio;
@@ -284,6 +291,13 @@ const Rindes = (() => {
             </div>
           </div>
           <div class="input-group">
+            <label>Fertilizantes</label>
+            <div class="input-unit">
+              <input type="number" id="c-fertilizante" value="55" oninput="Rindes.calcular()">
+              <span class="unit-badge">USD/HA</span>
+            </div>
+          </div>
+          <div class="input-group">
             <label>Labores / Siembra</label>
             <div class="input-unit">
               <input type="number" id="c-labores" value="60" oninput="Rindes.calcular()">
@@ -298,9 +312,9 @@ const Rindes = (() => {
             </div>
           </div>
           <div class="input-group">
-            <label>Flete</label>
+            <label>Flete / Gtos. Com.</label>
             <div class="input-unit">
-              <input type="number" id="c-flete" value="20" oninput="Rindes.calcular()">
+              <input type="number" id="c-flete_gastos" value="20" oninput="Rindes.calcular()">
               <span class="unit-badge">USD/HA</span>
             </div>
           </div>
@@ -308,6 +322,20 @@ const Rindes = (() => {
             <label>Arrendamiento</label>
             <div class="input-unit">
               <input type="number" id="c-arriendo" value="120" oninput="Rindes.calcular()">
+              <span class="unit-badge">USD/HA</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Seguro</label>
+            <div class="input-unit">
+              <input type="number" id="c-seguro" value="12" oninput="Rindes.calcular()">
+              <span class="unit-badge">USD/HA</span>
+            </div>
+          </div>
+          <div class="input-group full">
+            <label>Otros (gestión, estructura, admin.)</label>
+            <div class="input-unit">
+              <input type="number" id="c-otros" value="20" oninput="Rindes.calcular()">
               <span class="unit-badge">USD/HA</span>
             </div>
           </div>
