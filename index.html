@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroCalc — Calculadora de Rindes</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🌾</div>
+      <span class="logo-text">Agro<span>Calc</span></span>
+    </div>
+    <div class="header-right">
+      <div class="precio-header" id="precios-header">
+        <div class="precio-chip">
+          <span class="precio-chip-label">Soja</span>
+          <span class="precio-chip-value" id="h-soja">$280</span>
+        </div>
+        <div class="precio-chip">
+          <span class="precio-chip-label">Maíz</span>
+          <span class="precio-chip-value" id="h-maiz">$165</span>
+        </div>
+        <div class="precio-chip">
+          <span class="precio-chip-label">Trigo</span>
+          <span class="precio-chip-value" id="h-trigo">$210</span>
+        </div>
+        <div class="precio-chip">
+          <span class="precio-chip-label">Girasol</span>
+          <span class="precio-chip-value" id="h-girasol">$340</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Tu margen, <em>en tiempo real.</em></h1>
+      <p>Calculá el rinde de tu campaña, simulá escenarios y tomá decisiones con datos.</p>
+      <div class="cultivo-tabs" id="cultivo-tabs"></div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main" id="main-grid"></div>
+
+  <footer>
+    AgroCalc V1 · Precios de referencia MATBA-ROFEX · Los valores son estimativos y no constituyen asesoramiento.
+  </footer>
+
+  <!-- LIBS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- MÓDULOS -->
+  <script src="js/rindes.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
