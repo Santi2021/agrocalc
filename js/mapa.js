@@ -372,7 +372,7 @@ const Mapa = (() => {
   }
 
   // ── API PÚBLICA ──────────────────────────
-  return { init, cargarEnCalculadora, ZONAS };
+  return { init, cargarEnCalculadora, invalidar: () => { if (mapa) mapa.invalidateSize(); }, ZONAS };
 
 })();
 
