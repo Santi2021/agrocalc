@@ -86,16 +86,17 @@
 }
 
 /* ── TC CHIP EN HEADER ── */
-#tc-display {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--oro);
-  background: rgba(249,168,37,0.12);
-  border: 1px solid rgba(249,168,37,0.3);
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-weight: 600;
-  white-space: nowrap;
+.tc-chip {
+  background: rgba(249,168,37,0.15) !important;
+  border: 1px solid rgba(249,168,37,0.4) !important;
+}
+
+.tc-chip .precio-chip-label {
+  color: var(--oro) !important;
+}
+
+.tc-chip .precio-chip-value {
+  color: var(--oro) !important;
 }
 
 /* Ajustar nav-tab top cuando hay ticker */
