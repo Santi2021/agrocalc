@@ -18,7 +18,7 @@
       <span class="logo-text">Agro<span>Calc</span></span>
     </div>
     <div class="header-right">
-      <div class="precio-header">
+      <div class="precio-header" id="precio-header">
         <div class="precio-chip"><span class="precio-chip-label">Soja</span><span class="precio-chip-value" id="h-soja">$280</span></div>
         <div class="precio-chip"><span class="precio-chip-label">Maíz</span><span class="precio-chip-value" id="h-maiz">$165</span></div>
         <div class="precio-chip"><span class="precio-chip-label">Trigo</span><span class="precio-chip-value" id="h-trigo">$210</span></div>
@@ -27,12 +27,30 @@
           <span class="precio-chip-value" id="tc-display">$1.500</span>
         </div>
       </div>
+      <!-- Hamburger -->
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 
+  <!-- MENU MOBILE -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-precios">
+      <div class="precio-chip"><span class="precio-chip-label">Soja</span><span class="precio-chip-value" id="m-soja">$280</span></div>
+      <div class="precio-chip"><span class="precio-chip-label">Maíz</span><span class="precio-chip-value" id="m-maiz">$165</span></div>
+      <div class="precio-chip"><span class="precio-chip-label">Trigo</span><span class="precio-chip-value" id="m-trigo">$210</span></div>
+      <div class="precio-chip tc-chip"><span class="precio-chip-label">Dólar Oficial</span><span class="precio-chip-value" id="m-tc">$1.500</span></div>
+    </div>
+    <div class="mobile-nav">
+      <button class="mobile-nav-btn active" onclick="App.navigate('calculadora', this); toggleMenu()">🧮 Calculadora</button>
+      <button class="mobile-nav-btn" onclick="App.navigate('mapa', this); toggleMenu()">🗺️ Mapa de Calor</button>
+    </div>
+  </div>
+
   <!-- TICKER NOTICIAS -->
   <div id="ticker-wrap">
-    <div class="ticker-label">🌾 Agro News</div>
+    <div class="ticker-label">📡 News</div>
     <div class="ticker-track">
       <div id="ticker-contenido">
         <span class="ticker-item"><span class="ticker-fuente">⏳ Cargando</span><span class="ticker-titulo">Cargando noticias del agro...</span></span>
@@ -193,5 +211,22 @@
   <script src="js/noticias.js"></script>
   <script src="js/app.js"></script>
 
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn  = document.getElementById('hamburger');
+      menu.classList.toggle('open');
+      btn.classList.toggle('open');
+    }
+    // Cerrar menu al clickear afuera
+    document.addEventListener('click', e => {
+      const menu = document.getElementById('mobile-menu');
+      const btn  = document.getElementById('hamburger');
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
