@@ -90,12 +90,12 @@
   font-family: 'DM Mono', monospace;
   font-size: 0.72rem;
   color: var(--oro);
-  background: rgba(249,168,37,0.1);
+  background: rgba(249,168,37,0.12);
   border: 1px solid rgba(249,168,37,0.3);
   border-radius: 6px;
   padding: 4px 10px;
   font-weight: 600;
-  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 /* Ajustar nav-tab top cuando hay ticker */
