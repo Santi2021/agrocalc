@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AgroCalc — Calculadora de Rindes</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <!-- App CSS -->
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/mapa.css">
 </head>
 <body>
 
@@ -16,7 +20,7 @@
       <span class="logo-text">Agro<span>Calc</span></span>
     </div>
     <div class="header-right">
-      <div class="precio-header" id="precios-header">
+      <div class="precio-header">
         <div class="precio-chip">
           <span class="precio-chip-label">Soja</span>
           <span class="precio-chip-value" id="h-soja">$280</span>
@@ -37,27 +41,105 @@
     </div>
   </header>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-content">
-      <h1>Tu margen, <em>en tiempo real.</em></h1>
-      <p>Calculá el rinde de tu campaña, simulá escenarios y tomá decisiones con datos.</p>
-      <div class="cultivo-tabs" id="cultivo-tabs"></div>
+  <!-- NAV TABS -->
+  <nav class="app-nav">
+    <button class="nav-tab active" onclick="App.navigate('calculadora', this)">
+      🧮 Calculadora
+    </button>
+    <button class="nav-tab" onclick="App.navigate('mapa', this)">
+      🗺️ Mapa de Zonas
+    </button>
+  </nav>
+
+  <!-- ══ VISTA: CALCULADORA ══ -->
+  <div id="vista-calculadora">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Tu margen, <em>en tiempo real.</em></h1>
+        <p>Calculá el rinde de tu campaña, simulá escenarios y tomá decisiones con datos.</p>
+        <div class="cultivo-tabs" id="cultivo-tabs"></div>
+      </div>
+    </div>
+    <div class="main" id="main-grid"></div>
+  </div>
+
+  <!-- ══ VISTA: MAPA ══ -->
+  <div id="vista-mapa" style="display:none;">
+    <div class="mapa-hero">
+      <div class="hero-content">
+        <h1>Zonas <em>Agroeconómicas</em></h1>
+        <p>Seleccioná tu zona en el mapa para ver rendimientos históricos y cargar datos automáticamente.</p>
+      </div>
+    </div>
+    <div class="mapa-layout">
+
+      <!-- Panel izquierdo: mapa -->
+      <div class="mapa-container">
+        <div id="mapa-leaflet"></div>
+        <div class="mapa-leyenda" id="mapa-leyenda">
+          <div class="leyenda-title">Rentabilidad por zona</div>
+          <div class="leyenda-items">
+            <div class="leyenda-item"><span class="leyenda-dot" style="background:#2d7d3a"></span> Alta</div>
+            <div class="leyenda-item"><span class="leyenda-dot" style="background:#f9a825"></span> Media</div>
+            <div class="leyenda-item"><span class="leyenda-dot" style="background:#c62828"></span> Baja</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel derecho: info zona -->
+      <div class="mapa-panel" id="mapa-panel">
+        <div class="panel-placeholder" id="panel-placeholder">
+          <div class="placeholder-icon">📍</div>
+          <div class="placeholder-text">Hacé click en una zona del mapa para ver sus datos</div>
+        </div>
+        <div class="panel-info" id="panel-info" style="display:none;">
+          <div class="panel-zona-nombre" id="panel-zona-nombre">—</div>
+          <div class="panel-zona-badge" id="panel-zona-badge">—</div>
+
+          <div class="panel-stats">
+            <div class="panel-stat">
+              <div class="panel-stat-label">Rinde promedio histórico</div>
+              <div class="panel-stat-value" id="stat-rinde">—</div>
+            </div>
+            <div class="panel-stat">
+              <div class="panel-stat-label">Precio referencia</div>
+              <div class="panel-stat-value" id="stat-precio">—</div>
+            </div>
+            <div class="panel-stat">
+              <div class="panel-stat-label">Margen prom. últimas 5 campañas</div>
+              <div class="panel-stat-value" id="stat-margen">—</div>
+            </div>
+            <div class="panel-stat">
+              <div class="panel-stat-label">Cultivo predominante</div>
+              <div class="panel-stat-value" id="stat-cultivo">—</div>
+            </div>
+          </div>
+
+          <div class="panel-historico">
+            <div class="panel-historico-title">Rindes últimas campañas</div>
+            <div class="panel-barras" id="panel-barras"></div>
+          </div>
+
+          <button class="cargar-btn" id="cargar-btn" onclick="Mapa.cargarEnCalculadora()">
+            ✅ Cargar esta zona en la calculadora
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- MAIN GRID -->
-  <div class="main" id="main-grid"></div>
-
   <footer>
-    AgroCalc V1 · Precios de referencia MATBA-ROFEX · Los valores son estimativos y no constituyen asesoramiento.
+    AgroCalc V2 · Zonas agroeconómicas MAGYP · Precios MATBA-ROFEX · Estimativos, no constituyen asesoramiento.
   </footer>
 
   <!-- LIBS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <!-- MÓDULOS -->
   <script src="js/rindes.js"></script>
+  <script src="js/mapa.js"></script>
   <script src="js/app.js"></script>
 
 </body>
