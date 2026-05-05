@@ -19,7 +19,7 @@
 
 const Mercado = (() => {
 
-  const PROXY = 'https://api.allorigins.win/get?url=';
+  const PROXY = 'https://corsproxy.io/?';
   const YF    = 'https://query1.finance.yahoo.com/v8/finance/chart/';
 
   const SIMBOLOS = {
@@ -59,12 +59,11 @@ const Mercado = (() => {
 
   // ── FETCH YAHOO FINANCE ──────────────────
   async function fetchYahoo(simbolo) {
-    const yfUrl  = `${YF}${simbolo}?interval=1d&range=1d`;
+    const yfUrl    = `${YF}${simbolo}?interval=1d&range=1d`;
     const proxyUrl = `${PROXY}${encodeURIComponent(yfUrl)}`;
-    const res    = await fetch(proxyUrl);
-    const outer  = await res.json();
-    const data   = JSON.parse(outer.contents);
-    const precio = data?.chart?.result?.[0]?.meta?.regularMarketPrice;
+    const res      = await fetch(proxyUrl);
+    const data     = await res.json();
+    const precio   = data?.chart?.result?.[0]?.meta?.regularMarketPrice;
     if (!precio) throw new Error(`Sin precio para ${simbolo}`);
     return precio;
   }
@@ -152,7 +151,7 @@ const Mercado = (() => {
     const el = document.getElementById('tc-display');
     if (!el) return;
     const tc = tcUsdArs || 1500;
-    el.textContent = `USD/ARS $${tc.toLocaleString('es-AR')}`;
+    el.textContent = `TC $${tc.toLocaleString('es-AR')}`;
   }
 
   function actualizarCalculadora() {
