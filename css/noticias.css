@@ -99,7 +99,17 @@
   color: var(--oro) !important;
 }
 
-/* Ajustar nav-tab top cuando hay ticker */
+/* Ajustar nav-tab top cuando hay ticker + dark theme */
 .app-nav {
-  top: 98px !important; /* 64px header + 34px ticker */
+  top: 98px !important;
+  background: #0d1f0f !important;
+  border-bottom: 1px solid rgba(76,175,80,0.2) !important;
 }
+
+.nav-tab {
+  color: rgba(255,255,255,0.45) !important;
+  padding: 11px 22px !important;
+}
+
+.nav-tab:hover { color: rgba(255,255,255,0.8) !important; }
+.nav-tab.active { color: var(--oro) !important; border-bottom-color: var(--oro) !important; }
