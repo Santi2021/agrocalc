@@ -1,15 +1,15 @@
 /* ─────────────────────────────────────────
    AGROCALC — js/app.js
-   Orquestador principal
+   Orquestador principal + Router
    
    Responsabilidades:
    - Inicializar módulos en orden
-   - Manejar navegación futura entre secciones
-   - Estado global compartido entre módulos
+   - Manejar navegación entre vistas
+   - Estado global compartido
    
-   Módulos disponibles:
+   Módulos:
    ✅ Rindes    → js/rindes.js
-   🔜 Mapa      → js/mapa.js       (Sprint 2)
+   ✅ Mapa      → js/mapa.js
    🔜 Clima     → js/clima.js      (Sprint 3)
    🔜 Mercado   → js/mercado.js    (Sprint 4)
 ───────────────────────────────────────── */
@@ -17,42 +17,67 @@
 const App = (() => {
 
   // ── ESTADO GLOBAL ────────────────────────
-  // Acá van datos que varios módulos necesitan
   const state = {
     cultivoActual: 'soja',
     zonaActual:    'nucleo',
-    // Sprint 2: coordenadas del campo
-    // Sprint 3: datos de lluvia
+    vistaActual:   'calculadora',
+    // Sprint 3: datos clima por zona
+    // Sprint 4: precios mercado en tiempo real
   };
+
+  // ── NAVEGACIÓN ───────────────────────────
+  function navigate(vista, btnClickeado) {
+    // Ocultar todas las vistas
+    document.querySelectorAll('[id^="vista-"]').forEach(el => {
+      el.style.display = 'none';
+    });
+
+    // Mostrar vista target
+    const target = document.getElementById(`vista-${vista}`);
+    if (target) target.style.display = 'block';
+
+    // Actualizar tabs nav
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    if (btnClickeado) btnClickeado.classList.add('active');
+
+    // Lazy init del mapa cuando se abre por primera vez
+    if (vista === 'mapa' && window.Mapa) {
+      setTimeout(() => {
+        Mapa.init();
+        // Forzar resize para que Leaflet calcule bien el tamaño
+        if (Mapa._map) Mapa._map.invalidateSize();
+      }, 50);
+    }
+
+    state.vistaActual = vista;
+  }
 
   // ── INIT ─────────────────────────────────
   function init() {
-    console.log('🌾 AgroCalc iniciando...');
+    console.log('🌾 AgroCalc V2 iniciando...');
 
-    // Sprint 1: solo Rindes
+    // Módulo Rindes
     if (window.Rindes) {
       Rindes.init();
-      console.log('✅ Módulo Rindes cargado');
+      console.log('✅ Rindes cargado');
     }
 
-    // Sprint 2: descomentar cuando esté listo
-    // if (window.Mapa) {
-    //   Mapa.init();
-    //   console.log('✅ Módulo Mapa cargado');
-    // }
+    // Módulo Mapa — se inicializa lazy al navegar
+    if (window.Mapa) {
+      console.log('✅ Mapa registrado (lazy init)');
+    }
 
     // Sprint 3:
-    // if (window.Clima) {
-    //   Clima.init();
-    //   console.log('✅ Módulo Clima cargado');
-    // }
+    // if (window.Clima) { Clima.init(); }
 
-    console.log('🚀 AgroCalc listo');
+    // Sprint 4:
+    // if (window.Mercado) { Mercado.init(); }
+
+    console.log('🚀 AgroCalc V2 listo');
   }
 
-  return { init, state };
+  return { init, navigate, state };
 
 })();
 
-// Arrancar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', App.init);
