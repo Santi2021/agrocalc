@@ -17,14 +17,12 @@ const Rindes = (() => {
 
   // ── DATOS ────────────────────────────────
   const CULTIVOS = {
-    soja:    { emoji: '🌱', label: 'Soja',    precio: 280, rendRef: 35,
+    soja:  { emoji: '🌱', label: 'Soja',  precio: 280, rendRef: 35,
                costos: { semilla: 45, agro: 80, fertilizante: 55, labores: 60, cosecha: 35, flete_gastos: 20, arriendo: 120, seguro: 12, otros: 20 } },
-    maiz:    { emoji: '🌽', label: 'Maíz',    precio: 165, rendRef: 80,
+    maiz:  { emoji: '🌽', label: 'Maíz',  precio: 165, rendRef: 80,
                costos: { semilla: 90, agro: 100, fertilizante: 80, labores: 70, cosecha: 40, flete_gastos: 22, arriendo: 120, seguro: 14, otros: 22 } },
-    trigo:   { emoji: '🌾', label: 'Trigo',   precio: 210, rendRef: 40,
+    trigo: { emoji: '🌾', label: 'Trigo', precio: 210, rendRef: 40,
                costos: { semilla: 40, agro: 70, fertilizante: 65, labores: 55, cosecha: 30, flete_gastos: 18, arriendo: 110, seguro: 10, otros: 18 } },
-    girasol: { emoji: '🌻', label: 'Girasol', precio: 340, rendRef: 22,
-               costos: { semilla: 30, agro: 55, fertilizante: 40, labores: 55, cosecha: 28, flete_gastos: 15, arriendo: 100, seguro: 9, otros: 15 } },
   };
 
   const HISTORICOS = {
