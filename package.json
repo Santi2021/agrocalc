@@ -1,1 +1,8 @@
-
+{
+  "name": "agrocalc",
+  "version": "1.0.0",
+  "description": "AgroCalc - Calculadora de Rindes Agropecuarios",
+  "dependencies": {
+    "yahoo-finance2": "^2.11.3"
+  }
+}
