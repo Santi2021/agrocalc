@@ -57,24 +57,10 @@ const App = (() => {
   // ── INIT ─────────────────────────────────
   function init() {
     console.log('🌾 AgroCalc V2 iniciando...');
-
-    // Módulo Rindes
-    if (window.Rindes) {
-      Rindes.init();
-      console.log('✅ Rindes cargado');
-    }
-
-    // Módulo Mapa — se inicializa lazy al navegar
-    if (window.Mapa) {
-      console.log('✅ Mapa registrado (lazy init)');
-    }
-
-    // Sprint 3:
-    // if (window.Clima) { Clima.init(); }
-
-    // Sprint 4:
-    // if (window.Mercado) { Mercado.init(); }
-
+    if (window.Rindes)   { Rindes.init();   console.log('✅ Rindes'); }
+    if (window.Mercado)  { Mercado.init();  console.log('✅ Mercado'); }
+    if (window.Noticias) { Noticias.init(); console.log('✅ Noticias'); }
+    if (window.Mapa)     { console.log('✅ Mapa registrado (lazy)'); }
     console.log('🚀 AgroCalc V2 listo');
   }
 
