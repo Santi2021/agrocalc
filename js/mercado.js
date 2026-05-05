@@ -73,7 +73,7 @@ const Mercado = (() => {
   function actualizarTCDisplay() {
     const el = document.getElementById('tc-display');
     if (!el) return;
-    el.textContent = `TC $${tcOficial.toLocaleString('es-AR')}`;
+    el.textContent = `$${tcOficial.toLocaleString('es-AR')}`;
     if (timestamp) {
       const mins = Math.round((Date.now() - new Date(timestamp).getTime()) / 60000);
       el.title = `Actualizado hace ${mins} min · Yahoo Finance`;
