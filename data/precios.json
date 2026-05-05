@@ -1,0 +1,13 @@
+{
+  "precios": {
+    "soja": 280,
+    "maiz": 165,
+    "trigo": 210,
+    "girasol": 340
+  },
+  "tc": {
+    "oficial": 1500
+  },
+  "timestamp": "2025-01-01T00:00:00+00:00",
+  "fuente": "Fallback inicial — se actualiza cada 30 min via GitHub Actions"
+}
