@@ -26,27 +26,29 @@ const App = (() => {
   };
 
   // ── NAVEGACIÓN ───────────────────────────
+  let mapaInicializado = false;
+
   function navigate(vista, btnClickeado) {
-    // Ocultar todas las vistas
     document.querySelectorAll('[id^="vista-"]').forEach(el => {
       el.style.display = 'none';
     });
 
-    // Mostrar vista target
     const target = document.getElementById(`vista-${vista}`);
     if (target) target.style.display = 'block';
 
-    // Actualizar tabs nav
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     if (btnClickeado) btnClickeado.classList.add('active');
 
-    // Lazy init del mapa cuando se abre por primera vez
+    // Lazy init mapa — contenedor visible primero, luego init
     if (vista === 'mapa' && window.Mapa) {
-      setTimeout(() => {
-        Mapa.init();
-        // Forzar resize para que Leaflet calcule bien el tamaño
-        if (Mapa._map) Mapa._map.invalidateSize();
-      }, 50);
+      if (!mapaInicializado) {
+        setTimeout(() => {
+          Mapa.init();
+          mapaInicializado = true;
+        }, 100);
+      } else {
+        setTimeout(() => Mapa.invalidar(), 100);
+      }
     }
 
     state.vistaActual = vista;
