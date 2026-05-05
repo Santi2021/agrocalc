@@ -86,43 +86,93 @@
         </div>
       </div>
 
-      <!-- Panel derecho: info zona -->
+      <!-- Panel derecho: datos reales -->
       <div class="mapa-panel" id="mapa-panel">
+
+        <!-- Placeholder -->
         <div class="panel-placeholder" id="panel-placeholder">
-          <div class="placeholder-icon">📍</div>
-          <div class="placeholder-text">Hacé click en una zona del mapa para ver sus datos</div>
+          <div class="placeholder-icon" id="placeholder-icon">📍</div>
+          <div class="placeholder-text" id="placeholder-text">Hacé click en cualquier punto del mapa para ver datos reales de clima y NDVI</div>
         </div>
+
+        <!-- Loading -->
+        <div class="panel-loading" id="panel-loading" style="display:none;">
+          <div class="loading-spinner"></div>
+          <div class="loading-title">Consultando datos reales...</div>
+          <div class="loading-coords" id="loading-coords"></div>
+          <div class="loading-sources">Open-Meteo · NASA MODIS</div>
+        </div>
+
+        <!-- Info real -->
         <div class="panel-info" id="panel-info" style="display:none;">
-          <div class="panel-zona-nombre" id="panel-zona-nombre">—</div>
-          <div class="panel-zona-badge" id="panel-zona-badge">—</div>
 
-          <div class="panel-stats">
-            <div class="panel-stat">
-              <div class="panel-stat-label">Rinde promedio histórico</div>
-              <div class="panel-stat-value" id="stat-rinde">—</div>
+          <!-- Coordenadas -->
+          <div class="panel-coords" id="panel-coords">—</div>
+
+          <!-- NDVI -->
+          <div class="panel-section">
+            <div class="panel-section-title">🛰️ Índice NDVI — NASA MODIS 250m</div>
+            <div class="ndvi-row">
+              <div class="ndvi-valor" id="ndvi-valor">—</div>
+              <div class="ndvi-estado" id="ndvi-estado">—</div>
             </div>
-            <div class="panel-stat">
-              <div class="panel-stat-label">Precio referencia</div>
-              <div class="panel-stat-value" id="stat-precio">—</div>
+            <div class="ndvi-barra-wrap">
+              <div class="ndvi-barra-bg">
+                <div class="ndvi-barra" id="ndvi-barra" style="width:0%"></div>
+              </div>
+              <div class="ndvi-escala">
+                <span>0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0</span>
+              </div>
             </div>
-            <div class="panel-stat">
-              <div class="panel-stat-label">Margen prom. últimas 5 campañas</div>
-              <div class="panel-stat-value" id="stat-margen">—</div>
-            </div>
-            <div class="panel-stat">
-              <div class="panel-stat-label">Cultivo predominante</div>
-              <div class="panel-stat-value" id="stat-cultivo">—</div>
-            </div>
+            <div class="ndvi-desc" id="ndvi-desc">—</div>
+            <div class="ndvi-fecha" id="ndvi-fecha">—</div>
           </div>
 
-          <div class="panel-historico">
-            <div class="panel-historico-title">Rindes últimas campañas</div>
-            <div class="panel-barras" id="panel-barras"></div>
+          <!-- Clima -->
+          <div class="panel-section">
+            <div class="panel-section-title">🌧️ Clima — Open-Meteo</div>
+            <div class="clima-grid">
+              <div class="clima-stat">
+                <div class="clima-stat-label">Lluvia 30 días</div>
+                <div class="clima-stat-value" id="c-lluvia30">—</div>
+              </div>
+              <div class="clima-stat">
+                <div class="clima-stat-label">Lluvia 7 días</div>
+                <div class="clima-stat-value" id="c-lluvia7">—</div>
+              </div>
+              <div class="clima-stat">
+                <div class="clima-stat-label">Próx. 7 días</div>
+                <div class="clima-stat-value" id="c-lluvia-prox">—</div>
+              </div>
+              <div class="clima-stat">
+                <div class="clima-stat-label">Temp. máx prom</div>
+                <div class="clima-stat-value" id="c-temp-max">—</div>
+              </div>
+              <div class="clima-stat">
+                <div class="clima-stat-label">Temp. mín prom</div>
+                <div class="clima-stat-value" id="c-temp-min">—</div>
+              </div>
+              <div class="clima-stat">
+                <div class="clima-stat-label">ETo prom</div>
+                <div class="clima-stat-value" id="c-eto">—</div>
+              </div>
+            </div>
+
+            <div class="balance-row">
+              <span class="balance-label">Balance hídrico (30d)</span>
+              <span class="balance-value" id="c-balance">—</span>
+            </div>
+
+            <div class="lluvia-hist-title">Lluvia por semana (mm)</div>
+            <div class="panel-barras" id="lluvia-barras"></div>
           </div>
 
-          <button class="cargar-btn" id="cargar-btn" onclick="Mapa.cargarEnCalculadora()">
-            ✅ Cargar esta zona en la calculadora
-          </button>
+          <!-- Semáforo hídrico -->
+          <div class="semaforo" style="margin-top:0;">
+            <div class="semaforo-dot verde" id="sem-hidrico-dot"></div>
+            <span class="semaforo-text" id="sem-hidrico-text">—</span>
+          </div>
+
         </div>
       </div>
 
