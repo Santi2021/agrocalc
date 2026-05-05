@@ -15,8 +15,7 @@
 
 const Noticias = (() => {
 
-  // rss2json convierte RSS a JSON y resuelve CORS — gratis hasta 10k calls/mes
-  const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+  const CORS = 'https://corsproxy.io/?';
 
   const FUENTES = [
     {
@@ -25,14 +24,9 @@ const Noticias = (() => {
       url:    'https://bichosdecampo.com/feed/',
     },
     {
-      nombre: 'BCR',
+      nombre: 'BCR Rosario',
       emoji:  '🏛️',
       url:    'https://www.bcr.com.ar/es/mercados/investigacion-y-desarrollo/informes-especiales/feed',
-    },
-    {
-      nombre: 'Infobae Campo',
-      emoji:  '📰',
-      url:    'https://www.infobae.com/feeds/rss/campo/',
     },
     {
       nombre: 'Agrofy News',
@@ -43,6 +37,11 @@ const Noticias = (() => {
       nombre: 'La Nación Campo',
       emoji:  '📋',
       url:    'https://www.lanacion.com.ar/arc/outboundfeeds/rss/category/economia/campo/',
+    },
+    {
+      nombre: 'Clarín Rural',
+      emoji:  '📰',
+      url:    'https://www.clarin.com/rss/rural/',
     },
   ];
 
@@ -88,19 +87,25 @@ const Noticias = (() => {
   // ── FETCH FEED ───────────────────────────
   async function fetchFeed(fuente) {
     try {
-      const url  = `${RSS2JSON}${encodeURIComponent(fuente.url)}&count=5`;
+      const url  = `${CORS}${encodeURIComponent(fuente.url)}`;
       const res  = await fetch(url);
-      const data = await res.json();
+      const text = await res.text();
 
-      if (data.status !== 'ok' || !data.items?.length) return [];
+      // Parsear XML del RSS directo
+      const parser = new DOMParser();
+      const xml    = parser.parseFromString(text, 'text/xml');
+      const items  = Array.from(xml.querySelectorAll('item')).slice(0, 5);
 
-      return data.items.map(item => ({
-        titulo:  limpiarTexto(item.title),
-        link:    item.link,
-        fecha:   item.pubDate,
-        fuente:  fuente.nombre,
-        emoji:   fuente.emoji,
-      }));
+      if (!items.length) return [];
+
+      return items.map(item => ({
+        titulo: limpiarTexto(item.querySelector('title')?.textContent || ''),
+        link:   item.querySelector('link')?.textContent || fuente.url,
+        fecha:  item.querySelector('pubDate')?.textContent || '',
+        fuente: fuente.nombre,
+        emoji:  fuente.emoji,
+      })).filter(n => n.titulo.length > 5);
+
     } catch (e) {
       console.warn(`Feed ${fuente.nombre} falló:`, e);
       return [];
