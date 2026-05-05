@@ -1,75 +1,71 @@
 /* ─────────────────────────────────────────
    AGROCALC — js/mercado.js
-   Módulo: Precios live via Vercel API
+   Módulo: Precios live via GitHub Actions
    
-   Llama a:
-   GET /api/precios → commodities CBOT
-   GET /api/tc      → USD/ARS oficial + blue
+   Lee data/precios.json que GitHub Actions
+   actualiza cada 30 min con yfinance.
    
-   Sin CORS, sin proxies, todo desde el servidor.
+   Sin proxies, sin APIs externas, sin CORS.
 ───────────────────────────────────────── */
 
 const Mercado = (() => {
 
-  let precios  = { soja: 280, maiz: 165, trigo: 210, girasol: 340 };
-  let tcOficial = null;
-  let tcBlue    = null;
+  let precios   = { soja: 280, maiz: 165, trigo: 210, girasol: 340 };
+  let tcOficial = 1500;
+  let timestamp = null;
 
   // ── INIT ─────────────────────────────────
   async function init() {
-    console.log('📈 Mercado: iniciando...');
-
-    // Mostrar fallback inmediato
+    console.log('📈 Mercado: leyendo precios.json...');
     actualizarHeader();
     actualizarTCDisplay();
 
-    // Fetch datos reales en paralelo
-    await Promise.all([fetchPrecios(), fetchTC()]);
+    await fetchPrecios();
 
-    // Refresh cada 5 minutos
-    setInterval(() => Promise.all([fetchPrecios(), fetchTC()]), 5 * 60 * 1000);
-
-    console.log('✅ Mercado cargado', precios);
+    // Refresh cada 5 minutos (el JSON se actualiza cada 30)
+    setInterval(fetchPrecios, 5 * 60 * 1000);
   }
 
-  // ── FETCH PRECIOS ────────────────────────
+  // ── FETCH JSON ───────────────────────────
   async function fetchPrecios() {
     try {
-      const res  = await fetch('/api/precios');
+      // Cache-busting para que no sirva versión vieja
+      const url  = `/data/precios.json?t=${Date.now()}`;
+      const res  = await fetch(url);
       const data = await res.json();
-      if (data.ok && data.precios) {
-        precios = data.precios;
+
+      if (data.precios) {
+        precios   = data.precios;
+        tcOficial = data.tc?.oficial || 1500;
+        timestamp = data.timestamp;
+
         actualizarHeader();
+        actualizarTCDisplay();
         actualizarCalculadora();
+
+        console.log('✅ Precios actualizados:', precios, '| TC:', tcOficial);
+        console.log('⏰ Último update:', new Date(timestamp).toLocaleString('es-AR'));
       }
     } catch (e) {
-      console.warn('Precios API falló:', e);
-    }
-  }
-
-  // ── FETCH TC ─────────────────────────────
-  async function fetchTC() {
-    try {
-      const res  = await fetch('/api/tc');
-      const data = await res.json();
-      if (data.oficial) tcOficial = data.oficial;
-      if (data.blue)    tcBlue    = data.blue;
-      actualizarTCDisplay();
-    } catch (e) {
-      console.warn('TC API falló:', e);
+      console.warn('⚠️ No se pudo leer precios.json:', e);
     }
   }
 
   // ── UI ───────────────────────────────────
   function actualizarHeader() {
-    const claves = ['soja', 'maiz', 'trigo', 'girasol'];
-    claves.forEach(key => {
+    ['soja', 'maiz', 'trigo', 'girasol'].forEach(key => {
       const el = document.getElementById(`h-${key}`);
       if (el && precios[key]) {
         el.textContent = `$${precios[key]}`;
-        el.style.transition = 'color 0.4s';
-        el.style.color = '#69f0ae';
-        setTimeout(() => el.style.color = '', 1500);
+        if (timestamp) {
+          // Flash verde si el dato es reciente (< 1 hora)
+          const age = Date.now() - new Date(timestamp).getTime();
+          if (age < 60 * 60 * 1000) {
+            el.style.transition = 'color 0.4s';
+            el.style.color = '#69f0ae';
+            setTimeout(() => el.style.color = '', 2000);
+          }
+        }
       }
     });
   }
@@ -77,9 +73,10 @@ const Mercado = (() => {
   function actualizarTCDisplay() {
     const el = document.getElementById('tc-display');
     if (!el) return;
-    if (tcOficial) {
-      el.textContent = `TC $${tcOficial.toLocaleString('es-AR')}`;
-      el.title = tcBlue ? `Blue: $${tcBlue.toLocaleString('es-AR')}` : '';
+    el.textContent = `TC $${tcOficial.toLocaleString('es-AR')}`;
+    if (timestamp) {
+      const mins = Math.round((Date.now() - new Date(timestamp).getTime()) / 60000);
+      el.title = `Actualizado hace ${mins} min · Yahoo Finance`;
     }
   }
 
@@ -96,7 +93,7 @@ const Mercado = (() => {
   }
 
   function getPrecio(cultivo) { return precios[cultivo] || 0; }
-  function getTC()            { return tcOficial || 1500; }
+  function getTC()            { return tcOficial; }
 
   return { init, getPrecio, getTC, precios: () => precios };
 
