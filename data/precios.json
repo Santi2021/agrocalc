@@ -1,13 +1,13 @@
 {
   "precios": {
-    "soja": 446,
-    "maiz": 189,
-    "trigo": 247,
+    "soja": 448,
+    "maiz": 188,
+    "trigo": 246,
     "girasol": 340
   },
   "tc": {
-    "oficial": 1396
+    "oficial": 1390
   },
-  "timestamp": "2026-05-19T10:32:20.904955+00:00",
+  "timestamp": "2026-05-19T13:50:19.887422+00:00",
   "fuente": "Yahoo Finance via yfinance (GitHub Actions)"
 }
