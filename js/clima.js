@@ -13,8 +13,13 @@
 const Clima = (() => {
 
   // ── CONFIG ───────────────────────────────
-  // IMPORTANTE: Regenerar token en NASA Earthdata después de testear
-  const NASA_TOKEN = 'eyJ0eXAiOiJKV1QiLCJvcmlnaW4iOiJFYXJ0aGRhdGEgTG9naW4iLCJzaWciOiJlZGxqd3RwdWJrZXlfb3BzIiwiYWxnIjoiUlMyNTYifQ.eyJ0eXBlIjoiVXNlciIsInVpZCI6InNhbnRpZ29uemFsZXoiLCJleHAiOjE3ODMxODY0NzEsImlhdCI6MTc3ODAwMjQ3MSwiaXNzIjoiaHR0cHM6Ly91cnMuZWFydGhkYXRhLm5hc2EuZ292IiwiaWRlbnRpdHlfcHJvdmlkZXIiOiJlZGxfb3BzIiwiYWNyIjoiZWRsIiwiYXNzdXJhbmNlX2xldmVsIjozfQ.ZETXrCy-ANsxYDl4krkzDvY7Ae_fC7nOfbu1msv5ZjykE296q13B2BWHn5B9bIzpbUMeySH41kmPxlr7YIY0r3HuY3aBZSdsSTPEI41ywL0oH5r6iodxdHqmtnkkiIyWH7QKE6gv9swtymRMzp_A2AL2WBXgl7FLYGFdSdDnkQBn9ivt4yYCY0gZ0s1Cf0-nLb14phSQfgt2A6psD1mOYinxlPfTVgWLHM5MwHJ2MK4C4Xc5nAQkZaHAOlZ54HfUVr4SMO4YwKAZKs564hOjeKlJ-UwQknWV4Y-tbp1mddwafqpvs0adYXp6O2KBRLT_xZN6xA3GSVEXZ8Ps1FthtQ';
+  // NASA MODIS via ORNL DAAC no pide autenticacion: verificado el 20-08-2026,
+  // devuelve 200 sin cabecera Authorization. Aca habia un token de NASA
+  // Earthdata, vencido el 04-07-2026 y publicado en un repo publico.
+  //
+  // Y no habia forma de arreglarlo con otro token: esto es JavaScript de
+  // navegador. Cualquier credencial que se ponga aca la ve quien abra la
+  // pagina, tenga o no acceso al repo. Un secreto en el front no existe.
 
   // ── OPEN-METEO ───────────────────────────
   async function fetchClima(lat, lng) {
@@ -92,9 +97,7 @@ const Clima = (() => {
       `latitude=${lat}&longitude=${lng}`;
 
     try {
-      const res  = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${NASA_TOKEN}` }
-      });
+      const res  = await fetch(url);
 
       if (!res.ok) throw new Error('NDVI no disponible');
 
@@ -108,9 +111,7 @@ const Clima = (() => {
       const ndviUrl  = `https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?` +
         `latitude=${lat}&longitude=${lng}&startDate=${lastDate}&endDate=${lastDate}&kmAboveBelow=0&kmLeftRight=0`;
 
-      const ndviRes  = await fetch(ndviUrl, {
-        headers: { 'Authorization': `Bearer ${NASA_TOKEN}` }
-      });
+      const ndviRes  = await fetch(ndviUrl);
       const ndviData = await ndviRes.json();
 
       const rawNDVI  = ndviData.subset?.[0]?.data?.[0];
